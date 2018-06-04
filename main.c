@@ -23,6 +23,7 @@ int ft_pro_gnl(int argc, char **argv)
 	char *pnt;
 	int i;
 
+	i = 0;
 	ft_bzero(buf, BUFF_SIZE + 1);
 	if (!node)
 		node = (a_list *)ft_memalloc(sizeof(a_list)); // Create a node if one doesnt exist
@@ -41,18 +42,15 @@ int ft_pro_gnl(int argc, char **argv)
 			ft_memcpy(pnt, node->buf, i);
 			if (i < BUFF_SIZE)
 			{
-				ft_putstr(node->buf);
-				ft_putstr("\n");
 				ft_memcpy(buf, (node->buf + i) + 1, (BUFF_SIZE - i));
 				ft_memcpy(node->buf, buf, BUFF_SIZE - i);
-				ft_putstr("Hi\n");
-				//printf("[%s]\n", pnt);
+				printf("[%s]\n", pnt);
 				return(0);
 			}
 		}
 		else
 			ft_strcat(pnt, node->buf);
-		printf("[Overflow: %s] [pnt contains: %s]\n", node->buf, pnt);
+		//printf("[Overflow: %s] [pnt contains: %s]\n", node->buf, pnt);
 	} // If there is still a buf from the previous function call, concatinate into the new return point
 
 	if (!node->fd)
@@ -67,19 +65,23 @@ int ft_pro_gnl(int argc, char **argv)
 	if (i == 0)
 	{
 		ft_strcat(pnt, buf);
-		printf("[pnt contains: %s]\n", pnt);
+		//printf("[pnt contains: %s]\n", pnt);
 	}
-	if (i != 0)
-		*(ft_strchr(pnt, '\n')) = '\0'; //if there were bytes read, put a null at the newline char
-	if (node->buf)
+	else if (i != 0)
 	{
+		*(ft_strchr(pnt, '\n')) = '\0';
+		if (node->buf)
+		{
 		free(node->buf);
-		ft_putstr("free success\n"); //if a remainder buf already exists free it
-	}
-	node->buf = (char *)(char*)ft_memalloc(sizeof(char)*(BUFF_SIZE) + 1);
-	ft_putstr("node buff malloc assigned\n");
-	//ft_memcpy(node->buf, ft_strchr(buf, '\n') + 1, ((BUFF_SIZE - ft_strclen(buf, '\n') + 1))); //create a new remainder buff
-	ft_putstr("memcpy success\n");
+		//ft_putstr("free success\n"); //if a remainder buf already exists free it
+		}
+		node->buf = (char *)(char*)ft_memalloc(sizeof(char)*(BUFF_SIZE) + 1);
+		ft_memcpy(node->buf, ft_strchr(buf, '\n') + 1, ((BUFF_SIZE - ft_strclen(buf, '\n') + 1))); //create a new remainder buff
+ 	}
+ //if there were bytes read, put a null at the newline char
+	
+	//ft_putstr("node buff malloc assigned\n");
+	//ft_putstr("memcpy success\n");
 	ft_putstr(pnt);
 	ft_putstr("\n");
 	free(pnt);
