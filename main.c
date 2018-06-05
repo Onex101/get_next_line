@@ -16,86 +16,118 @@
 #include "libft/libft.h"
 #include "get_next_line.h"
 
-int ft_pro_gnl(int argc, char **argv)
+static int gnl_cat(char *buf, char *pnt, a_list *node)
+{
+	int i;
+
+	i = 0;
+	if(node->buf)
+	{
+		printf("Overflow: [%s]\n", node->buf);
+		if(ft_strchr(node->buf, '\n'))
+			{
+				ft_strcat(pnt, node->buf);
+				*(ft_strchr(pnt, '\n')) = '\0';
+				i = ft_strlen(pnt);
+				ft_memcpy(pnt, node->buf, i);
+				if (i < BUFF_SIZE)
+				{
+					ft_memcpy(buf, (node->buf + i) + 1, (BUFF_SIZE - i));
+					ft_memcpy(node->buf, buf, BUFF_SIZE - i);
+				}
+				return (1);
+			}
+	ft_strcat(pnt, node->buf);
+	}
+	return (0);
+}
+
+static int gnl_read(char *pnt, char *buf, a_list *node)
+{
+	int i;
+
+	i = 0;
+	while ((i = read(node->fd, buf, BUFF_SIZE)) > 0)
+	{
+		ft_strcat(pnt, buf);
+		printf("Read: [%d]\n", i);
+		if (ft_strchr(buf, '\n'))
+			break;
+		ft_bzero(buf, BUFF_SIZE);
+	}
+	if (i != 0)
+	{
+		printf("Return before null term: [%s]\n", pnt);
+		
+		if (i < BUFF_SIZE)
+			pnt[i - 10] = '\0';
+		*(ft_strchr(pnt, '\n')) = '\0';
+		printf("Return: [%s]\n", pnt);
+		if (node->buf)
+			free(node->buf);
+ 		node->buf = (char *)(char*)ft_memalloc(sizeof(char)*(BUFF_SIZE) + 1);
+ 		ft_memcpy(node->buf, ft_strchr(buf, '\n') + 1, ((BUFF_SIZE - ft_strclen(buf, '\n') + 1)));
+		printf("Overflow: [%s] Return: [%s]\n", node->buf, pnt);
+		return (1);
+ 	}
+	printf("Overflow: [%s] Return: [%s]\n", node->buf, pnt);
+	return (0);
+}
+
+int get_next_line(int argc, char **line)
 {
 	char buf[BUFF_SIZE + 1];
 	static a_list *node;
 	char *pnt;
 	int i;
+	int g_cat;
+	int g_read;
 
 	i = 0;
 	ft_bzero(buf, BUFF_SIZE + 1);
-	if (!node)
-		node = (a_list *)ft_memalloc(sizeof(a_list)); // Create a node if one doesnt exist
-	if (!argv[1])
-		node->fd = 1; // If an text file isnt given read from standard in
-	pnt = (char *)ft_memalloc(BUFF_SIZE + 1 + 100); // Create a return pointer
+	pnt = (char *)ft_memalloc(BUFF_SIZE + 1 + 100);
 	if (!pnt)
-		return (-1); // Check if it exists else return an error
-	if(node->buf)
+		return (-1);
+	if (!node)
+		node = (a_list *)ft_memalloc(sizeof(a_list));
+	if(!node)
+		return(-1);
+	if (!line[1])
+		node->fd = 1;
+	if((g_cat = gnl_cat(buf, pnt, node)) == 1)
 	{
-		if(ft_strchr(node->buf, '\n'))
-		{
-			ft_strcat(pnt, node->buf);
-			*(ft_strchr(pnt, '\n')) = '\0';
-			i = ft_strlen(pnt);
-			ft_memcpy(pnt, node->buf, i);
-			if (i < BUFF_SIZE)
-			{
-				ft_memcpy(buf, (node->buf + i) + 1, (BUFF_SIZE - i));
-				ft_memcpy(node->buf, buf, BUFF_SIZE - i);
-				printf("[%s]\n", pnt);
-				return(0);
-			}
-		}
-		else
-			ft_strcat(pnt, node->buf);
-		//printf("[Overflow: %s] [pnt contains: %s]\n", node->buf, pnt);
-	} // If there is still a buf from the previous function call, concatinate into the new return point
-
+		return (1);
+	}
 	if (!node->fd)
-		node->fd = open(argv[1], O_RDONLY);
-	while ((i = read(node->fd, buf, BUFF_SIZE)) > 0) // Start the read
-	{
-		ft_strcat(pnt, buf);	//Concatenate into return buf
-		if (ft_strchr(buf, '\n')) //if there is a '\n' char break out of the loop
-			break;
-		ft_bzero(buf, BUFF_SIZE + 1); // overwrite the buff with zeros
-	}
-	if (i == 0)
-	{
-		ft_strcat(pnt, buf);
-		//printf("[pnt contains: %s]\n", pnt);
-	}
-	else if (i != 0)
-	{
-		*(ft_strchr(pnt, '\n')) = '\0';
-		if (node->buf)
-		{
-		free(node->buf);
-		//ft_putstr("free success\n"); //if a remainder buf already exists free it
-		}
-		node->buf = (char *)(char*)ft_memalloc(sizeof(char)*(BUFF_SIZE) + 1);
-		ft_memcpy(node->buf, ft_strchr(buf, '\n') + 1, ((BUFF_SIZE - ft_strclen(buf, '\n') + 1))); //create a new remainder buff
- 	}
- //if there were bytes read, put a null at the newline char
-	
-	//ft_putstr("node buff malloc assigned\n");
-	//ft_putstr("memcpy success\n");
-	ft_putstr(pnt);
-	ft_putstr("\n");
+		node->fd = open(line[1], O_RDONLY);
+	g_read = gnl_read(pnt, buf, node);
+	printf("[g_read = %d] [g_cat = %d] [%s]\n", g_read, g_cat, pnt);
 	free(pnt);
-	return (0);
+	if (g_read == 0 && g_cat == 0)
+	{
+		ft_bzero(buf, BUFF_SIZE + 1);
+		ft_bzero(node->buf, ft_strlen(node->buf));
+		return (0);
+	}
+	return (1);
 }
 
 int main(int argc, char **argv)
 {
-	ft_pro_gnl(argc, argv);
-	ft_pro_gnl(argc, argv);
-	ft_pro_gnl(argc, argv);
-	ft_pro_gnl(argc, argv);
-	ft_pro_gnl(argc, argv);
-	ft_pro_gnl(argc, argv);
+
+	write(1 , "====== CALL ONE ======\n", 24);
+	get_next_line(argc, argv);
+	write(1 , "====== CALL TWO ======\n", 24);
+	get_next_line(argc, argv);
+	write(1 , "====== CALL THREE ======\n", 26);
+	get_next_line(argc, argv);
+	write(1 , "====== CALL FOUR ======\n", 25);
+	get_next_line(argc, argv);
+	write(1 , "====== CALL FIVE ======\n", 25);
+	get_next_line(argc, argv);
+	write(1 , "====== CALL SIX ======\n", 25);
+	get_next_line(argc, argv);
+
 
 	return (0);
 }
