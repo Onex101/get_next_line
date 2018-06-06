@@ -13,7 +13,7 @@
 #ifndef GET_NEXT_LINE
 #define GET_NEXT_LINE
 #define BUFF_SIZE 137
-#include "libft/libft.h"
+#include "./libft/libft.h"
 
 typedef struct b_list
 {
