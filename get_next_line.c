@@ -28,9 +28,9 @@ static	int	gnl_read(char **pnt, char *buf, t_line *node)
 		{
 			*pnt = ft_strjoin(*pnt, buf);
 
-			ft_putstr("Point = ");
-			ft_putstr(*pnt);
-			ft_putstr("\n");
+			// ft_putstr("Point = ");
+			// ft_putstr(*pnt);
+			// ft_putstr("\n");
 			break ;
 		}
 		*pnt = ft_strjoin(*pnt, buf);
@@ -45,9 +45,9 @@ static	int	gnl_read(char **pnt, char *buf, t_line *node)
 		if (node->buf)
 		 	free(node->buf);
 		node->buf = ft_strdup(ft_strchr(buf, '\n') + 1);
-		ft_putstr("Node->buf = ");
-		ft_putstr(node->buf);
-		ft_putstr("\n");
+		// ft_putstr("Node->buf = ");
+		// ft_putstr(node->buf);
+		// ft_putstr("\n");
 		return (1);
 	}
 	return (0);
