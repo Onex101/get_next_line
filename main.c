@@ -26,6 +26,7 @@ int		main(int argc, char **argv)
 		return (2);
 	while (get_next_line(fd, &line) == 1)
 	{
+		ft_putstr("PRINTING LINE...\n");
 		ft_putendl(line);
 		free(line);
 	}

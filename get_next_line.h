@@ -12,14 +12,15 @@
 
 #ifndef GET_NEXT_LINE
 #define GET_NEXT_LINE
-#define BUFF_SIZE 137
+#define BUFF_SIZE 1
 #include "./libft/libft.h"
 
-typedef struct b_list
+typedef struct s_line
 {
 	int fd;
 	char *buf;
-}			a_list;
+	int read;
+}			t_line;
 
 int		get_next_line(const int fd, char **line);
 
