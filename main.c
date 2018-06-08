@@ -28,7 +28,7 @@
 // 	{
 // 		ft_putstr("PRINTING LINE...\n");
 // 		ft_putendl(line);
-// 		free(line);
+// 		//free(line);
 // 	}
 // 	if (argc == 2)
 // 		close(fd);
@@ -57,17 +57,16 @@ int	main()
      
      start = clock();
 	int i;
-	int fd = open("large_file.txt", O_RDONLY);
+	int fd = open("bb.txt", O_RDONLY);
 	char	**line;
-	line = malloc(100000);
-	*line = malloc(100000);
+	line = (char **)malloc(sizeof(char *));
+	//*line = (char *)malloc(1);
 	i = 1;
-	int count = 0;
-	while (count != 783)
+	while (get_next_line(fd, line) == 1)
 	{	
-		count++;
-		i = get_next_line(fd, line);
 		printf("%d : len : %zu [%s]\n",i ,ft_strlen(*line), *line);
+		free(*line);
+
 	}
 	 end = clock();
 	printf("%lu\n",end );
