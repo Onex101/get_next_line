@@ -34,25 +34,29 @@ static	int	gnl_read(char *buf, t_line *node)
 			ft_strclr(buf);
 	}
 	if (i == 0 && j == 1)
-		return (0);
-	else if (j > 0)
+		return (1);
+	else if (j > 0 && buf)
 	{
 		node->read = i;
 		if (node->buf)
-		  	free(node->buf);
-		if (i < BUFF_SIZE)
-			node->buf = ft_strdup(buf);
-		else
+			free(node->buf);
+		if (ft_strchr(buf, '\n'))
 			node->buf = ft_strdup((ft_strchr(buf, '\n')) + 1);
+		else
+			node->buf = ft_strdup(buf);
+		ft_strclr(buf);
+		ft_putstr("THis is node buf = ");
+		ft_putendl(node->buf);
 		return (1);
 	}
 	return (0);
 }
 
-static	int	gnl_cat(char *buf, t_line *node)
+static	int	gnl_cat(t_line *node)
 {
 	if (node->buf)
 	{
+		ft_putnbr(node->read);
 		if (ft_strchr(node->buf, '\n'))
 		{
 			ft_strncat(node->pnt, node->buf, ft_strclen(node->buf, '\n'));
@@ -62,12 +66,26 @@ static	int	gnl_cat(char *buf, t_line *node)
 		else if (node->read && node->read < BUFF_SIZE)
 		{
 			ft_strcat(node->pnt, node->buf);
-			if (gnl_read(buf, node) == 0)
 			node->read = 0;
-			return (1);
+			return (0);
 		}
 		ft_strcat(node->pnt, node->buf);
 		ft_strclr(node->buf);
+	}
+	return (0);
+}
+
+static	int new_node(const int fd, t_line **node)
+{
+	if (!*node)
+	{
+		*node = (t_line *)ft_memalloc(sizeof(t_line));
+		if (!*node)
+			return (-1);
+		(*node)->fd = fd;
+		(*node)->pnt = (char *)ft_memalloc(1000000);
+		if (!(*node)->pnt)
+			return (-1);
 	}
 	return (0);
 }
@@ -78,31 +96,20 @@ int			get_next_line(const int fd, char **line)
 	static	t_line	*node;
 	int				i;
 	int				g_cat;
-	int				g_read;
 
 	i = 0;
 	ft_bzero(buf, BUFF_SIZE + 1);
-	if (!node)
-	{
-		node = (t_line *)ft_memalloc(sizeof(t_line));
-		node->fd = fd;
-		node->pnt = (char *)ft_memalloc(1000000);
-	}
-	ft_strclr(node->pnt);
-	if (!line || !node || fd < 0)
+	if (!line || fd < 0 || (read(fd, 0, 0) == -1))
 		return (-1);
+	if (new_node(fd, &node) == -1)
+		return (-1);
+	ft_strclr(node->pnt);
 	*line = node->pnt;
-	if ((g_cat = gnl_cat(buf, node)) == 1)
-	{
-		*line = ft_strdup(node->pnt);
+	if ((g_cat = gnl_cat(node)) == 1)
 		return (1);
-	}
-	g_read = gnl_read(buf, node);
-	if (g_read == 0 && g_cat == 0)
+	if (gnl_read(buf, node) == 0 && g_cat == 0)
 	{
-		*line = ft_strdup(node->pnt);
 		return (0);
 	}
-	ft_strclr(node->pnt);
 	return (1);
 }

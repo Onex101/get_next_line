@@ -26,16 +26,12 @@
 // 		return (2);
 // 	while (get_next_line(fd, &line) == 1)
 // 	{
-// 		ft_putstr("PRINTING LINE...\n");
 // 		ft_putendl(line);
 // 		//free(line);
 // 	}
 // 	if (argc == 2)
 // 		close(fd);
 // }
-
-
-
 
 
 
@@ -53,24 +49,27 @@
 int	main()
 {
 
-	 clock_t start, end;
+	clock_t start, end;
+	double time_spent;
      
-     start = clock();
+    start = clock();
 	int i;
-	int fd = open("bb.txt", O_RDONLY);
+	int fd = open("txt_files/gnl7_2.txt", O_RDONLY);
 	char	**line;
-	line = (char **)malloc(sizeof(char *));
-	//*line = (char *)malloc(1);
+	line = malloc(100000);
+	*line = malloc(100000);
 	i = 1;
-	while (get_next_line(fd, line) == 1)
-	{	
-		printf("%d : len : %zu [%s]\n",i ,ft_strlen(*line), *line);
-		free(*line);
 
+	while ((i = get_next_line(fd, line)) > 0)
+	{	
+		printf("%d: Buff: {%d}  len: %zu [%s]\n",i ,BUFF_SIZE,ft_strlen(*line), *line);
 	}
 	 end = clock();
-	printf("%lu\n",end );
+	
 
-     // cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
+	time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+ 	printf("%f\n",time_spent); 
+	return(0);
 }
+
+
