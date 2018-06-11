@@ -54,15 +54,15 @@ int	main()
      
     start = clock();
 	int i;
-	int fd = open("txt_files/gnl7_2.txt", O_RDONLY);
+	int fd = open("txt_files/one_big_fat_line.txt", O_RDONLY);
 	char	**line;
 	line = malloc(100000);
 	*line = malloc(100000);
 	i = 1;
 
-	while ((i = get_next_line(fd, line)) > 0)
+	while (get_next_line(fd, line) > 0)
 	{	
-		printf("%d: Buff: {%d}  len: %zu [%s]\n",i ,BUFF_SIZE,ft_strlen(*line), *line);
+		printf("%d: Buff: {%d}  len: %zu [%s]\n",i++ ,BUFF_SIZE,ft_strlen(*line), *line);
 	}
 	 end = clock();
 	

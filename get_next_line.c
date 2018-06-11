@@ -45,8 +45,6 @@ static	int	gnl_read(char *buf, t_line *node)
 		else
 			node->buf = ft_strdup(buf);
 		ft_strclr(buf);
-		ft_putstr("THis is node buf = ");
-		ft_putendl(node->buf);
 		return (1);
 	}
 	return (0);
@@ -56,7 +54,6 @@ static	int	gnl_cat(t_line *node)
 {
 	if (node->buf)
 	{
-		ft_putnbr(node->read);
 		if (ft_strchr(node->buf, '\n'))
 		{
 			ft_strncat(node->pnt, node->buf, ft_strclen(node->buf, '\n'));
@@ -67,7 +64,7 @@ static	int	gnl_cat(t_line *node)
 		{
 			ft_strcat(node->pnt, node->buf);
 			node->read = 0;
-			return (0);
+			return (1);
 		}
 		ft_strcat(node->pnt, node->buf);
 		ft_strclr(node->buf);
