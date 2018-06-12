@@ -35,11 +35,6 @@
 
 
 
-
-
-
-
-
 #include "get_next_line.h"
 #include <stdio.h>
 #include <fcntl.h>
@@ -56,8 +51,8 @@ int	main()
 	int i;
 	int fd = open("txt_files/one_big_fat_line.txt", O_RDONLY);
 	char	**line;
-	line = malloc(100000);
-	*line = malloc(100000);
+	line = malloc(sizeof(*line));
+
 	i = 1;
 
 	while (get_next_line(fd, line) > 0)

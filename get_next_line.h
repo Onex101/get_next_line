@@ -5,23 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: xrhoda <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/30 09:27:02 by xrhoda            #+#    #+#             */
-/*   Updated: 2018/05/31 08:15:26 by xrhoda           ###   ########.fr       */
+/*   Created: 2018/06/12 13:12:13 by xrhoda            #+#    #+#             */
+/*   Updated: 2018/06/12 13:12:15 by xrhoda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE
 #define GET_NEXT_LINE
-#define BUFF_SIZE 10
+#define BUFF_SIZE 50000
 #include "./libft/libft.h"
-
-typedef struct s_line
-{
-	int 	fd;
-	char 	*pnt;
-	char 	*buf;
-	int 	read;
-}			t_line;
 
 int		get_next_line(const int fd, char **line);
 
