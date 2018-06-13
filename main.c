@@ -49,15 +49,16 @@ int	main()
      
     start = clock();
 	int i;
-	int fd = open("txt_files/one_big_fat_line.txt", O_RDONLY);
+	int fd = open("txt_files/gnl11_2.txt", O_RDONLY);
 	char	**line;
+	int		k;
 	line = malloc(sizeof(*line));
 
 	i = 1;
 
-	while (get_next_line(fd, line) > 0)
+	while ((k = get_next_line(fd, line)) > 0)
 	{	
-		printf("%d: Buff: {%d}  len: %zu [%s]\n",i++ ,BUFF_SIZE,ft_strlen(*line), *line);
+		printf("%d: ret: %d Buff: {%d}  len: %zu [%s]\n",i++, k, BUFF_SIZE, ft_strlen(*line), *line);
 	}
 	 end = clock();
 	
